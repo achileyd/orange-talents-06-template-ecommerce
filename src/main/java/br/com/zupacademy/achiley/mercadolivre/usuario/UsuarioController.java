@@ -14,7 +14,7 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository repository;
 	
-	@PostMapping("/usuarios")
+	@PostMapping("/cadastro-usuario")
 	public ResponseEntity<Void> cadastrar(@RequestBody @Valid UsuarioForm form) {
 		Usuario usuario = form.converter();
 		repository.save(usuario);

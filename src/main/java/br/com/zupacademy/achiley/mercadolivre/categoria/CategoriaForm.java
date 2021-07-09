@@ -1,5 +1,6 @@
 package br.com.zupacademy.achiley.mercadolivre.categoria;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotBlank;
 
 import br.com.zupacademy.achiley.mercadolivre.shared.ExistsId;
@@ -31,12 +32,13 @@ public class CategoriaForm {
 		return categoriaMaeId;
 	}
 
-	public Categoria converter() {
+	public Categoria converter(EntityManager manager) {
 		
 		Categoria categoria = new Categoria (nome);
 		
-		if(!(categoriaMaeId == null)) {
-			categoria.setCategoriaMaeId(categoriaMaeId);
+		if(categoriaMaeId != null) {
+			Categoria mae = manager.find(Categoria.class, categoriaMaeId);
+			categoria.setCategoriaMae(mae);
 		}
 		
 		return categoria;

@@ -19,7 +19,7 @@ public class CategoriaController {
 	@PostMapping("/categorias")
 	@Transactional
 	public String cadastrar(@RequestBody @Valid CategoriaForm form) {
-		Categoria categoria = form.converter();
+		Categoria categoria = form.converter(manager);
 		manager.persist(categoria);
 		
 		return categoria.toString();
