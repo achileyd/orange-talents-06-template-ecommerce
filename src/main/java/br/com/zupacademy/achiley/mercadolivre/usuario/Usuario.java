@@ -86,6 +86,12 @@ public class Usuario implements UserDetails  {
 	public Long getId() {
 		return id;
 	}
+	
+	@Override
+	public String toString() {
+		return "Usuario = [" +
+				"\nNome = " + email + "]";
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

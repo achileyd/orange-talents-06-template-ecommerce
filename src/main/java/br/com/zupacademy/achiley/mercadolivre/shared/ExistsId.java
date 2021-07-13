@@ -22,4 +22,6 @@ public @interface ExistsId {
 	Class<? extends Payload>[] payload() default {};
 	
 	Class<?> domainClass();
+	
+	String fieldName();
 }

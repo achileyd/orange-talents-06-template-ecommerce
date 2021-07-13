@@ -10,7 +10,7 @@ public class CategoriaForm {
 	@NotBlank
 	@UniqueValue(domainClass = Categoria.class, fieldName = "nome")
 	private String nome;
-	@ExistsId(domainClass = Categoria.class)
+	@ExistsId(domainClass = Categoria.class, fieldName = "id")
 	private Long categoriaMaeId;
 	
 	@Deprecated
