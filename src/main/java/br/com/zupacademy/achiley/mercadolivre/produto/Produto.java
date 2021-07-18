@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -16,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 import br.com.zupacademy.achiley.mercadolivre.categoria.Categoria;
 import br.com.zupacademy.achiley.mercadolivre.produto.caracteriscas.CaracteristicasProduto;
 import br.com.zupacademy.achiley.mercadolivre.produto.caracteriscas.CaracteristicasProdutoForm;
+import br.com.zupacademy.achiley.mercadolivre.produto.imagens.ImagemDoProduto;
 import br.com.zupacademy.achiley.mercadolivre.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
 
@@ -47,14 +48,19 @@ public class Produto {
 	private String descricao;
 	private LocalDateTime momentoCadastro = LocalDateTime.now();
 	@NotNull
+	@Valid
 	@ManyToOne
 	private Categoria categoria;
 	@NotNull
+	@Valid
 	@ManyToOne
 	private Usuario vendedor;
 	@NotNull
 	@OneToMany(mappedBy = "produto",cascade = CascadeType.PERSIST)
 	private Set<CaracteristicasProduto> caracteristicas = new HashSet<>();
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<ImagemDoProduto> imagens = new HashSet<>();
 	
 	@Override
 	public int hashCode() {
@@ -88,7 +94,7 @@ public class Produto {
 
 	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco, @NotNull @Positive Integer quantidadeDisponivel,
 			@NotBlank @Size(max = 1000) String descricao, @NotNull Categoria categoria,
-			@NotNull Usuario vendedor, @NotNull Collection<CaracteristicasProdutoForm> caracteristicas) {
+			@NotNull Usuario vendedor, @NotNull @Valid Collection<CaracteristicasProdutoForm> caracteristicas) {
 		Assert.hasLength(nome, "O campo nome nao pode estar em branco");
 		Assert.hasLength(descricao, "O campo descricao nao pode estar em branco");
 		Assert.notNull(categoria, "O objeto categoria nao pode estar nulo");
@@ -107,7 +113,7 @@ public class Produto {
 		Assert.isTrue(this.caracteristicas.size() >= 3, "O produto deve ter no mínimo 3 características");
 	}
 
-	public String ToString() {
+	public String toString() {
 		return "Produto [\nNome = " +nome+ 
 				   "\nPreco = "+preco+
 				   "\nQuantidade = " +quantidadeDisponivel+ 
@@ -115,13 +121,20 @@ public class Produto {
 				   "\nCadastrado em = " +momentoCadastro+ 
 				   "\nCaracteristicas = " +caracteristicas+
 				   "\nCategoria = " +categoria+ 
-				   "\nVendedor = " +vendedor+ "]";
+				   "\nVendedor = " +vendedor+ 
+				   "\nImagens = " +imagens+"]";
 	}
-	
-	public <T> Set<T> mapeiaCaracteristicas(
-			Function<CaracteristicasProduto, T> funcaoMapeadora) {
-		return this.caracteristicas.stream().map(funcaoMapeadora)
+
+	public boolean pertenceAoUsuario(Usuario usuarioLogado) {
+		return this.vendedor.equals(usuarioLogado);
+	}
+
+	public void associaImagens(Set<String> links) {
+		Set<ImagemDoProduto> imagens = links.stream()
+				.map(link -> new ImagemDoProduto(link, this))
 				.collect(Collectors.toSet());
+
+		this.imagens.addAll(imagens);
 	}
-	
+
 }

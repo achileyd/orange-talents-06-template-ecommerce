@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -34,6 +35,7 @@ public class ProdutoForm {
 	private Long categoriaId;
 	@NotNull
 	@Size(min = 3)
+	@Valid
 	private List<CaracteristicasProdutoForm> caracteristicas = new ArrayList<>();
 
 	@Deprecated
@@ -43,7 +45,7 @@ public class ProdutoForm {
 
 	public ProdutoForm(@NotBlank String nome, @NotNull @Positive BigDecimal preco,
 			@NotNull @Positive Integer quantidadeDisponivel, @NotBlank @Size(max = 1000) String descricao,
-			@NotNull Long categoriaId, @NotNull @Size(min = 3) List<CaracteristicasProdutoForm> caracteristicas) {
+			@NotNull Long categoriaId, @Valid @NotNull @Size(min = 3) List<CaracteristicasProdutoForm> caracteristicas) {
 		super();
 		this.nome = nome;
 		this.preco = preco;
@@ -102,18 +104,6 @@ public class ProdutoForm {
 
 		}
 		return duplicados;
-	}
-	
-	public boolean temCaracteristicaComCamposVazios() {
-
-		for (CaracteristicasProdutoForm caracteristica : caracteristicas) {
-			String nome = caracteristica.getNome();
-			String descricao = caracteristica.getDescricao();
-			if(nome.isBlank() || descricao.isBlank()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }

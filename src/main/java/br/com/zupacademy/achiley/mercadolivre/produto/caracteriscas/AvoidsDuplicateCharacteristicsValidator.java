@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 import br.com.zupacademy.achiley.mercadolivre.produto.ProdutoForm;
 
 @Component
-public class CharacteristicsValuesValidator implements Validator  {
+public class AvoidsDuplicateCharacteristicsValidator implements Validator  {
 
 	@Override
 	public boolean supports(Class<?> klass) {
@@ -23,11 +23,6 @@ public class CharacteristicsValuesValidator implements Validator  {
 		}
 		
 		ProdutoForm form = (ProdutoForm) obj;
-
-		Boolean camposVazios = form.temCaracteristicaComCamposVazios();
-		if(camposVazios) {
-			errors.rejectValue("caracteristicas", null, "As caracteristicas nao podem ter campos vazios");
-		}
 		
 		Set<String> duplicados = form.buscarCaracteristicasDuplicadas();
 		if(!duplicados.isEmpty()) {
