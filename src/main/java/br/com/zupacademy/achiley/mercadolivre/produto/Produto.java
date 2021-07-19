@@ -25,6 +25,7 @@ import br.com.zupacademy.achiley.mercadolivre.categoria.Categoria;
 import br.com.zupacademy.achiley.mercadolivre.produto.caracteriscas.CaracteristicasProduto;
 import br.com.zupacademy.achiley.mercadolivre.produto.caracteriscas.CaracteristicasProdutoForm;
 import br.com.zupacademy.achiley.mercadolivre.produto.imagens.ImagemDoProduto;
+import br.com.zupacademy.achiley.mercadolivre.produto.opinioes.OpiniaoProduto;
 import br.com.zupacademy.achiley.mercadolivre.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
 
@@ -61,6 +62,9 @@ public class Produto {
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<ImagemDoProduto> imagens = new HashSet<>();
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<OpiniaoProduto> opinioes = new HashSet<>();	
 	
 	@Override
 	public int hashCode() {

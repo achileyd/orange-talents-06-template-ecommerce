@@ -11,6 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 @Primary
 public class UploaderFake implements Uploader {
+	/**
+	 * 
+	 * @param imagens
+	 * @return links para imagens que foram uploadadas
+	 */
 	
 	@Override
 	public Set<String> envia(List<MultipartFile> imagens) {
